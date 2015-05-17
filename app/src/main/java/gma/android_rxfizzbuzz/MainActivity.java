@@ -81,19 +81,11 @@ public class MainActivity extends ActionBarActivity {
 
             tvFizzBuzz = (TextView)rootView.findViewById(R.id.fb_value);
 
-            Func1<Long, String> mapFB = new Func1<Long, String>() {
-                @Override
-                public String call(Long t) {
-                    return t.toString() + " : " + (
-                            t != 0 && t % 3 == 0 && t % 5 == 0 ? "FizzBuzz"
-                                                  : t % 3 == 0 ? "Fizz"
-                                                  : t % 5 == 0 ? "Buzz"
-                                                  :              t.toString()
-                    );
-                }
-            };
-
-            obs = Observable.interval(1, TimeUnit.SECONDS).map(mapFB);
+            obs = Observable.interval(1, TimeUnit.SECONDS).map(t -> t.toString() + " : " + (
+                t != 0 && t % 3 == 0 && t % 5 == 0 ? "FizzBuzz"
+                                      : t % 3 == 0 ? "Fizz"
+                                      : t % 5 == 0 ? "Buzz"
+                                      :              t.toString()));
 
             return rootView;
         }
@@ -103,20 +95,15 @@ public class MainActivity extends ActionBarActivity {
         {
             super.onResume();
 
-            Action1<String> println = new Action1<String>() {
-                @Override
-                public void call(String m) {
-                    tvFizzBuzz.setText(m);
-                    getView().setBackgroundColor(m.contains("FizzBuzz") ? Color.argb(255,190,230,190)
-                                                   : m.contains("Fizz") ? Color.argb(255,230,190,190)
-                                                   : m.contains("Buzz") ? Color.argb(255,190,190,230)
-                                                   :                      Color.argb(255,255,255,255));
-                }
-            };
-
             subs = obs.subscribeOn(Schedulers.newThread())
                       .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(println);
+                      .subscribe(m -> {
+                          tvFizzBuzz.setText(m);
+                          getView().setBackgroundColor(m.contains("FizzBuzz") ? Color.argb(255,190,230,190)
+                                  : m.contains("Fizz") ? Color.argb(255,230,190,190)
+                                  : m.contains("Buzz") ? Color.argb(255,190,190,230)
+                                  :                      Color.argb(255,255,255,255));
+                      });
         }
 
         @Override
