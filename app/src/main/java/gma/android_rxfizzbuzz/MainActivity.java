@@ -81,11 +81,12 @@ public class MainActivity extends ActionBarActivity {
 
             tvFizzBuzz = (TextView)rootView.findViewById(R.id.fb_value);
 
-            obs = Observable.interval(1, TimeUnit.SECONDS).map(t -> t.toString() + " : " + (
-                t != 0 && t % 3 == 0 && t % 5 == 0 ? "FizzBuzz"
-                                      : t % 3 == 0 ? "Fizz"
-                                      : t % 5 == 0 ? "Buzz"
-                                      :              t.toString()));
+            obs = Observable.interval(1, TimeUnit.SECONDS)
+                            .map(t -> t.toString() + " : " + (
+                                      t != 0 && t % 3 == 0 && t % 5 == 0 ? "FizzBuzz"
+                                                            : t % 3 == 0 ? "Fizz"
+                                                            : t % 5 == 0 ? "Buzz"
+                                                            :              t.toString()));
 
             return rootView;
         }
